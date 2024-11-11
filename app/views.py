@@ -9,6 +9,7 @@ import json
 from django.conf import settings
 from django.core.paginator import Paginator
 
+
 class HomePage(TemplateView):
     template_name = 'pages/home.html'
 
@@ -22,6 +23,7 @@ class HomePage(TemplateView):
         context['recent_products'] = recent_products
 
         return context
+
 
 class ProductListView(ListView):
     template_name = 'pages/product_list.html'
@@ -42,13 +44,15 @@ class ProductListView(ListView):
 
         # Fetch distinct genres and years from the database
         context['products'] = products
-        context['genres'] = Product.objects.values_list('genre', flat=True).distinct().order_by('title')
-        context['years'] = Product.objects.values_list('year', flat=True).distinct().order_by('year')
+        context['genres'] = Product.objects.values_list(
+            'genre', flat=True).distinct().order_by('title')
+        context['years'] = Product.objects.values_list(
+            'year', flat=True).distinct().order_by('year')
         context['categories'] = Category.objects.all()
         context['subcategories'] = Subcategory.objects.all()
 
         return context
-    
+
     def get_page_range(self, page_obj, paginator):
         current_page = page_obj.number
         total_pages = paginator.num_pages
@@ -83,7 +87,8 @@ class ProductListView(ListView):
         min_price = self.request.GET.get('min_price')
         max_price = self.request.GET.get('max_price')
         if min_price and max_price:
-            queryset = queryset.filter(price__gte=min_price, price__lte=max_price)
+            queryset = queryset.filter(price__gte=min_price,
+                                       price__lte=max_price)
 
         # Handle sorting by price
         sort_option = self.request.GET.get('sort')
@@ -97,16 +102,16 @@ class ProductListView(ListView):
 
 class CategoryProductListView(ListView):
     template_name = 'pages/category_product_list.html'
-    paginate_by = 12 
+    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         # Define category_slug
         category_slug = self.kwargs.get('category_slug')
 
         products = self.get_queryset()
-        
+
         # Pagination
         paginator = Paginator(products, self.paginate_by)
         page_number = self.request.GET.get('page', 1)
@@ -118,14 +123,16 @@ class CategoryProductListView(ListView):
 
         # Fetch distinct genres and years from the database
         context['products'] = products
-        context['genres'] = Product.objects.values_list('genre', flat=True).distinct().order_by('genre')
-        context['years'] = Product.objects.values_list('year', flat=True).distinct().order_by('year')
+        context['genres'] = Product.objects.values_list(
+            'genre', flat=True).distinct().order_by('genre')
+        context['years'] = Product.objects.values_list(
+            'year', flat=True).distinct().order_by('year')
 
         context['category'] = get_object_or_404(Category, slug=category_slug)
         context['categories'] = Category.objects.all()
         context['subcategories'] = Subcategory.objects.all()
-        context['category_slug'] = category_slug 
-        
+        context['category_slug'] = category_slug
+
         return context
 
     def get_page_range(self, page_obj, paginator):
@@ -164,7 +171,8 @@ class CategoryProductListView(ListView):
         min_price = self.request.GET.get('min_price')
         max_price = self.request.GET.get('max_price')
         if min_price and max_price:
-            queryset = queryset.filter(price__gte=min_price, price__lte=max_price)
+            queryset = queryset.filter(price__gte=min_price,
+                                       price__lte=max_price)
 
         # Handle sorting by price
         sort_option = self.request.GET.get('sort')
@@ -175,18 +183,17 @@ class CategoryProductListView(ListView):
 
         return queryset
 
-        
 
 class SubcategoryProductListView(ListView):
     template_name = 'pages/subcategory_product_list.html'
-    paginate_by = 12 
+    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         subcategory_slug = self.kwargs.get('subcategory_slug')
 
         products = self.get_queryset()
-        
+
         # Pagination
         paginator = Paginator(products, self.paginate_by)
         page_number = self.request.GET.get('page', 1)
@@ -198,17 +205,19 @@ class SubcategoryProductListView(ListView):
 
         # Fetch distinct genres and years from the database
         context['products'] = products
-        context['genres'] = Product.objects.values_list('genre', flat=True).distinct().order_by('genre')
-        context['years'] = Product.objects.values_list('year', flat=True).distinct().order_by('year')
+        context['genres'] = Product.objects.values_list(
+            'genre', flat=True).distinct().order_by('genre')
+        context['years'] = Product.objects.values_list(
+            'year', flat=True).distinct().order_by('year')
 
-
-        context['subcategory'] = get_object_or_404(Subcategory, slug=subcategory_slug)
+        context['subcategory'] = get_object_or_404(Subcategory,
+                                                   slug=subcategory_slug)
         context['categories'] = Category.objects.all()
         context['subcategories'] = Subcategory.objects.all()
         context['subcategory_slug'] = subcategory_slug
 
         return context
-    
+
     def get_page_range(self, page_obj, paginator):
         current_page = page_obj.number
         total_pages = paginator.num_pages
@@ -245,7 +254,8 @@ class SubcategoryProductListView(ListView):
         min_price = self.request.GET.get('min_price')
         max_price = self.request.GET.get('max_price')
         if min_price and max_price:
-            queryset = queryset.filter(price__gte=min_price, price__lte=max_price)
+            queryset = queryset.filter(price__gte=min_price,
+                                       price__lte=max_price)
 
         # Handle sorting by price
         sort_option = self.request.GET.get('sort')
@@ -255,7 +265,6 @@ class SubcategoryProductListView(ListView):
             queryset = queryset.order_by('-price')
 
         return queryset
-    
 
 
 class ProductDetailView(DetailView):
@@ -269,8 +278,10 @@ class ProductDetailView(DetailView):
         context['categories'] = Category.objects.all()
         context['subcategories'] = Subcategory.objects.all()
         product_subcategory = self.object.subcategory
-        
-        recent_products = Product.objects.filter(subcategory=product_subcategory).exclude(id=self.object.id).order_by('-id')[:4]
+        print("Product Detailed View", self.object.image1.url)
+        recent_products = Product.objects.filter(
+            subcategory=product_subcategory).exclude(
+                id=self.object.id).order_by('-id')[:4]
         # Get the four most recently added products (excluding the current product)
         # recent_products = Product.objects.exclude(id=self.object.id).order_by('-id')[:4]
         print(recent_products)
@@ -312,8 +323,10 @@ def send_to_telegram_view(request):
             print(f'Error processing the order: {str(e)}')  # Debug print
             return JsonResponse({'status': 'error', 'message': str(e)})
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-
+    return JsonResponse({
+        'status': 'error',
+        'message': 'Invalid request method'
+    })
 
 
 def send_to_telegram(message):
@@ -329,5 +342,6 @@ def send_to_telegram(message):
     response = requests.post(telegram_api_url, params=params)
 
     if response.status_code != 200:
-        print(f"Failed to send message to Telegram. Status code: {response.status_code}")
-
+        print(
+            f"Failed to send message to Telegram. Status code: {response.status_code}"
+        )
