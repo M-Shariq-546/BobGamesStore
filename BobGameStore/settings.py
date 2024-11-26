@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-r$&b-$5$@7rl2l_z$w3ma1r8s3od!!z89^vebb6n71dzi*pfwc
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'www.bobgameslb.com', 'bobgameslb.com', 'localhost', '.worf.replit.dev'
+    "*"
 ]
 
 # Application definition
@@ -138,6 +138,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://86f08266-54c6-454f-a3e1-c512f77783bd-00-2o8xufuvsj6pb.worf.replit.dev:3001",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    'http://localhost:9000',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -171,5 +172,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:3000",
+    "http://localhost:9000",
     "https://86f08266-54c6-454f-a3e1-c512f77783bd-00-2o8xufuvsj6pb.worf.replit.dev:8000",
 ]

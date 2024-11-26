@@ -9,8 +9,8 @@
                 <div class="nav-top">
                     <div class="nav-logo"><a href="{% url 'home' %}"><img src="{% static './assets/logo.png' %}" alt="logo"></a></div>
                     <div class="nav-search">
-                        <form action="">
-                            <input type="text" placeholder="Search">
+                        <form action="" method='GET'>
+                            <input type="text" name='search' placeholder="Search">
                             <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </form>
                     </div>

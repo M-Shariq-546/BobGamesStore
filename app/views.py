@@ -17,7 +17,8 @@ class HomePage(TemplateView):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['subcategories'] = Subcategory.objects.all()
-
+        search_by = self.request.GET.get('search')
+        print("========================================= searched by ", search_by)
         # Get the four most recently added products
         recent_products = Product.objects.order_by('-id')[:4]
         context['recent_products'] = recent_products
@@ -37,6 +38,8 @@ class ProductListView(ListView):
         paginator = Paginator(products, self.paginate_by)
         page_number = self.request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
+        search_by = self.request.GET.get('?')
+        print("========================================= searched by ", search_by)
 
         context['page_obj'] = page_obj
         context['page_range'] = self.get_page_range(page_obj, paginator)
